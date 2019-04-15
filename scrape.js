@@ -1,15 +1,27 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const mongoose = require('mongoose');
+const express = require('express');
 
 // reference to the mongoose schema for the database
-const db = require('./models');
+const db = require("./models");
 
-// connect to the mongo database
+// Initialize Express
+const app = express();
+
+// Parse request body as JSON
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// connect to the mongo database (data will go into a DB called 'scraper')
 mongoose.connect('mongodb://localhost/scraper', { useNewUrlParser: true });
 mongoose.connection.on('error', function () {
   console.error('MongoDB Connection Error.');
 });
+
+// --------------------------------------------------------------------
+// This will scrape the data from the website and add it into mongoDB
+// --------------------------------------------------------------------
 
 // use axios to get all the data from the website
 axios.get('https://www.nationalgeographic.com.au/news/animals.aspx').then(function (response) {
@@ -32,12 +44,14 @@ axios.get('https://www.nationalgeographic.com.au/news/animals.aspx').then(functi
 
     // add the result object to the database using the schema created in "model.js"
     db.Article.create(result).then((dbArticle) => {
-      console.log("START ARTICLES")
+      // console.log("START ARTICLES")
       console.log(dbArticle);
     }).catch((error) => {
       console.log(error);
     });
   });
+});
 
-})
+
+
 
