@@ -1,17 +1,9 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const mongoose = require('mongoose');
-const express = require('express');
 
 // reference to the mongoose schema for the database
 const db = require("./models");
-
-// Initialize Express
-const app = express();
-
-// Parse request body as JSON
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 // connect to the mongo database (data will go into a DB called 'scraper')
 mongoose.connect('mongodb://localhost/scraper', { useNewUrlParser: true });
